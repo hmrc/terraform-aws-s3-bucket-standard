@@ -33,8 +33,8 @@ data "aws_iam_policy_document" "bucket" {
       values   = local.listers
     }
     condition {
-      test     = "StringNotEquals"
-      variable = "aws:Service"
+      test     = "StringNotLike"
+      variable = "aws:PrincipalServiceName"
       values   = local.list_services
     }
   }
@@ -56,8 +56,8 @@ data "aws_iam_policy_document" "bucket" {
       values   = sort(distinct(concat(local.readers, local.writers, local.describers)))
     }
     condition {
-      test     = "StringNotEquals"
-      variable = "aws:Service"
+      test     = "StringNotLike"
+      variable = "aws:PrincipalServiceName"
       values   = local.default_services
     }
   }
@@ -79,8 +79,8 @@ data "aws_iam_policy_document" "bucket" {
       values   = local.readers
     }
     condition {
-      test     = "StringNotEquals"
-      variable = "aws:Service"
+      test     = "StringNotLike"
+      variable = "aws:PrincipalServiceName"
       values   = local.read_services
     }
   }
@@ -104,8 +104,8 @@ data "aws_iam_policy_document" "bucket" {
       values   = local.writers
     }
     condition {
-      test     = "StringNotEquals"
-      variable = "aws:Service"
+      test     = "StringNotLike"
+      variable = "aws:PrincipalServiceName"
       values   = local.write_services
     }
   }
@@ -134,8 +134,8 @@ data "aws_iam_policy_document" "bucket" {
       values   = local.describers
     }
     condition {
-      test     = "StringNotEquals"
-      variable = "aws:Service"
+      test     = "StringNotLike"
+      variable = "aws:PrincipalServiceName"
       values   = local.metadata_read_services
     }
   }
@@ -384,8 +384,8 @@ data "aws_iam_policy_document" "bucket" {
         values   = sort(distinct(concat(local.admins, local.describers)))
       }
       condition {
-        test     = "StringNotEquals"
-        variable = "aws:Service"
+      test     = "StringNotLike"
+      variable = "aws:PrincipalServiceName"
         values   = local.default_services
       }
     }
@@ -419,8 +419,8 @@ data "aws_iam_policy_document" "bucket" {
         values   = sort(distinct(concat(local.admins, local.describers)))
       }
       condition {
-        test     = "StringNotEquals"
-        variable = "aws:Service"
+      test     = "StringNotLike"
+      variable = "aws:PrincipalServiceName"
         values   = local.default_services
       }
     }
