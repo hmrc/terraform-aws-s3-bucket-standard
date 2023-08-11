@@ -28,12 +28,12 @@ data "aws_iam_policy_document" "bucket" {
       "${module.bucket.arn}/*"
     ]
     condition {
-      test     = "ForAnyValue:StringNotLike"
+      test     = "StringNotLike"
       variable = "aws:PrincipalArn"
       values   = local.listers
     }
     condition {
-      test     = "ForAnyValue:StringNotLike"
+      test     = "StringNotLike"
       variable = "aws:PrincipalServiceName"
       values   = local.list_services
     }
@@ -51,12 +51,12 @@ data "aws_iam_policy_document" "bucket" {
     ]
     resources = [module.bucket.arn]
     condition {
-      test     = "ForAnyValue:StringNotLike"
+      test     = "StringNotLike"
       variable = "aws:PrincipalArn"
       values   = sort(distinct(concat(local.readers, local.writers, local.describers)))
     }
     condition {
-      test     = "ForAnyValue:StringNotLike"
+      test     = "StringNotLike"
       variable = "aws:PrincipalServiceName"
       values   = local.default_services
     }
@@ -74,12 +74,12 @@ data "aws_iam_policy_document" "bucket" {
     ]
     resources = ["${module.bucket.arn}/*"]
     condition {
-      test     = "ForAnyValue:StringNotLike"
+      test     = "StringNotLike"
       variable = "aws:PrincipalArn"
       values   = local.readers
     }
     condition {
-      test     = "ForAnyValue:StringNotLike"
+      test     = "StringNotLike"
       variable = "aws:PrincipalServiceName"
       values   = local.read_services
     }
@@ -99,12 +99,12 @@ data "aws_iam_policy_document" "bucket" {
     ]
     resources = ["${module.bucket.arn}/*"]
     condition {
-      test     = "ForAnyValue:StringNotLike"
+      test     = "StringNotLike"
       variable = "aws:PrincipalArn"
       values   = local.writers
     }
     condition {
-      test     = "ForAnyValue:StringNotLike"
+      test     = "StringNotLike"
       variable = "aws:PrincipalServiceName"
       values   = local.write_services
     }
@@ -129,12 +129,12 @@ data "aws_iam_policy_document" "bucket" {
     ]
     resources = [module.bucket.arn]
     condition {
-      test     = "ForAnyValue:StringNotLike"
+      test     = "StringNotLike"
       variable = "aws:PrincipalArn"
       values   = local.describers
     }
     condition {
-      test     = "ForAnyValue:StringNotLike"
+      test     = "StringNotLike"
       variable = "aws:PrincipalServiceName"
       values   = local.metadata_read_services
     }
@@ -379,13 +379,13 @@ data "aws_iam_policy_document" "bucket" {
         values   = var.restricted_vpce_access
       }
       condition {
-        test     = "ForAnyValue:StringNotLike"
+        test     = "StringNotLike"
         variable = "aws:PrincipalArn"
         values   = sort(distinct(concat(local.admins, local.describers)))
       }
       condition {
-        test     = "ForAnyValue:StringNotLike"
-        variable = "aws:PrincipalServiceName"
+      test     = "StringNotLike"
+      variable = "aws:PrincipalServiceName"
         values   = local.default_services
       }
     }
@@ -414,13 +414,13 @@ data "aws_iam_policy_document" "bucket" {
         values   = var.restricted_ip_access
       }
       condition {
-        test     = "ForAnyValue:StringNotLike"
+        test     = "StringNotLike"
         variable = "aws:PrincipalArn"
         values   = sort(distinct(concat(local.admins, local.describers)))
       }
       condition {
-        test     = "ForAnyValue:StringNotLike"
-        variable = "aws:PrincipalServiceName"
+      test     = "StringNotLike"
+      variable = "aws:PrincipalServiceName"
         values   = local.default_services
       }
     }
