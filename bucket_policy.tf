@@ -13,6 +13,119 @@ resource "aws_s3_bucket_policy" "bucket" {
 */
 data "aws_iam_policy_document" "bucket" {
 
+  dynamic "statement" {
+    for_each = length(local.metadata_read_services) > 0 ? [1] : []
+
+    content {
+      sid    = "AllowReadBucketMetadataAWSServices"
+      effect = "Deny"
+      principals {
+        type        = "Service"
+        identifiers = local.metadata_read_services
+      }
+      actions = [
+        "s3:GetAccelerateConfiguration",
+        "s3:GetAnalyticsConfiguration",
+        "s3:GetBucket*",
+        "s3:GetEncryptionConfiguration",
+        "s3:GetInventoryConfiguration",
+        "s3:GetLifecycleConfiguration",
+        "s3:GetMetricsConfiguration",
+        "s3:GetReplicationConfiguration",
+      ]
+
+      resources = [
+        module.bucket.arn,
+        "${module.bucket.arn}/*"
+      ]
+      condition {
+        test     = "BoolIfExists"
+        values   = ["false"]
+        variable = "aws:PrincipalIsAWSService"
+      }
+    }
+  }
+
+  dynamic "statement" {
+    for_each = length(local.read_services) > 0 ? [1] : []
+
+    content {
+      sid    = "AllowReadBucketObjectsAWSServices"
+      effect = "Deny"
+      principals {
+        type        = "Service"
+        identifiers = local.read_services
+      }
+      actions = [
+        "s3:GetObject*",
+      ]
+
+      resources = [
+        module.bucket.arn,
+        "${module.bucket.arn}/*"
+      ]
+      condition {
+        test     = "BoolIfExists"
+        values   = ["false"]
+        variable = "aws:PrincipalIsAWSService"
+      }
+    }
+  }
+
+  dynamic "statement" {
+    for_each = length(local.list_services) > 0 ? [1] : []
+
+    content {
+      sid    = "DenyListBucketAWSServices"
+      effect = "Deny"
+      principals {
+        type        = "Service"
+        identifiers = local.list_services
+      }
+      actions = [
+        "s3:ListBucket*",
+      ]
+
+      resources = [
+        module.bucket.arn,
+        "${module.bucket.arn}/*"
+      ]
+      condition {
+        test     = "BoolIfExists"
+        values   = ["false"]
+        variable = "aws:PrincipalIsAWSService"
+      }
+    }
+  }
+
+  dynamic "statement" {
+    for_each = length(local.write_services) > 0 ? [1] : []
+
+    content {
+      sid    = "DenyWriteBucketAWSServices"
+      effect = "Deny"
+      principals {
+        type        = "Service"
+        identifiers = local.write_services
+      }
+      actions = [
+        "s3:DeleteObject*",
+        "s3:PutObject*",
+        "s3:ListMultipartUploadParts",
+      ]
+
+      resources = [
+        module.bucket.arn,
+        "${module.bucket.arn}/*"
+      ]
+      condition {
+        test     = "BoolIfExists"
+        values   = ["false"]
+        variable = "aws:PrincipalIsAWSService"
+      }
+    }
+  }
+
   statement {
     sid    = "DenyListBucketContents"
     effect = "Deny"
@@ -32,11 +145,6 @@ data "aws_iam_policy_document" "bucket" {
       variable = "aws:PrincipalArn"
       values   = local.listers
     }
-    condition {
-      test     = "StringNotEquals"
-      variable = "aws:Service"
-      values   = local.list_services
-    }
   }
 
   statement {
@@ -55,11 +163,6 @@ data "aws_iam_policy_document" "bucket" {
       variable = "aws:PrincipalArn"
       values   = sort(distinct(concat(local.readers, local.writers, local.describers)))
     }
-    condition {
-      test     = "StringNotEquals"
-      variable = "aws:Service"
-      values   = local.default_services
-    }
   }
 
   statement {
@@ -77,11 +180,6 @@ data "aws_iam_policy_document" "bucket" {
       test     = "StringNotLike"
       variable = "aws:PrincipalArn"
       values   = local.readers
-    }
-    condition {
-      test     = "StringNotEquals"
-      variable = "aws:Service"
-      values   = local.read_services
     }
   }
 
@@ -102,11 +200,6 @@ data "aws_iam_policy_document" "bucket" {
       test     = "StringNotLike"
       variable = "aws:PrincipalArn"
       values   = local.writers
-    }
-    condition {
-      test     = "StringNotEquals"
-      variable = "aws:Service"
-      values   = local.write_services
     }
   }
 
@@ -132,11 +225,6 @@ data "aws_iam_policy_document" "bucket" {
       test     = "StringNotLike"
       variable = "aws:PrincipalArn"
       values   = local.describers
-    }
-    condition {
-      test     = "StringNotEquals"
-      variable = "aws:Service"
-      values   = local.metadata_read_services
     }
   }
 
@@ -383,11 +471,6 @@ data "aws_iam_policy_document" "bucket" {
         variable = "aws:PrincipalArn"
         values   = sort(distinct(concat(local.admins, local.describers)))
       }
-      condition {
-        test     = "StringNotEquals"
-        variable = "aws:Service"
-        values   = local.default_services
-      }
     }
   }
 
@@ -417,11 +500,6 @@ data "aws_iam_policy_document" "bucket" {
         test     = "StringNotLike"
         variable = "aws:PrincipalArn"
         values   = sort(distinct(concat(local.admins, local.describers)))
-      }
-      condition {
-        test     = "StringNotEquals"
-        variable = "aws:Service"
-        values   = local.default_services
       }
     }
   }

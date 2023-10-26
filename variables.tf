@@ -126,8 +126,20 @@ variable "write_services" {
 
 variable "allow_guardduty_metadata_audit" {
   type        = bool
-  description = "Adds the AWS GuradDuty service linked role to check metadata of the bucket. This allows it to alert on buckets made public"
+  description = "Adds the AWS Guardduty service linked role to check metadata of the bucket. This allows it to alert on buckets made public"
   default     = true
+}
+
+variable "allow_config_metadata_audit" {
+  type        = bool
+  description = "Adds the AWS Config service linked role to check metadata of the bucket. This allows it to scan bucket resources"
+  default     = false
+}
+
+variable "allow_access_analyzer_metadata_audit" {
+  type        = bool
+  description = "Adds the AWS Access Analyzer service linked role to check metadata of the bucket. This allows it to scan bucket resources"
+  default     = false
 }
 
 variable "allow_security_team_metadata_audit" {
