@@ -8,7 +8,7 @@ resource "aws_s3_bucket_policy" "bucket" {
    To use an action, a principal must not be denied, but must also have an allow rule
    Denies are strict and explicit, completely limiting actions to only those
    that should have them.
-   NOTE: Any actions added for bucket or object should be also added to the relevant DenyUnknown
+   NOTE: Any actions added for bucket or object should be also added to the relevant DenyUnrequired
    statements.
 */
 data "aws_iam_policy_document" "bucket" {
@@ -167,7 +167,7 @@ data "aws_iam_policy_document" "bucket" {
   }
 
   statement {
-    sid    = "DenyUnknownBucketActions"
+    sid    = "DenyUnrequiredBucketActions"
     effect = "Deny"
     principals {
       type        = "AWS"
@@ -202,7 +202,7 @@ data "aws_iam_policy_document" "bucket" {
   }
 
   statement {
-    sid    = "DenyUnknownObjectActions"
+    sid    = "DenyUnrequiredObjectActions"
     effect = "Deny"
     principals {
       type        = "*"

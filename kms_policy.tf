@@ -140,7 +140,7 @@ data "aws_iam_policy_document" "kms" {
   }
 
   statement {
-    sid    = "DenyUnknownKMSActions"
+    sid    = "DenyUnrequiredKMSActions"
     effect = "Deny"
 
     principals {
