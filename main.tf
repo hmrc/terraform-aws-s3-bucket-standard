@@ -1,10 +1,10 @@
 terraform {
-  required_version = ">= 0.13.7"
+  required_version = ">= 1.0"
 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 4.9"
+      version = ">= 5.49"
     }
   }
 }
@@ -32,18 +32,19 @@ locals {
 }
 
 module "bucket" {
-  source                     = "github.com/hmrc/terraform-aws-s3-bucket-core?ref=3.0.1"
-  bucket_name                = var.bucket_name
-  versioning_enabled         = var.versioning_enabled
-  data_expiry                = var.data_expiry
-  data_sensitivity           = var.data_sensitivity
-  force_destroy              = var.force_destroy
-  kms_key_policy             = data.aws_iam_policy_document.kms.json
-  log_bucket_id              = var.log_bucket_id
-  tags                       = var.tags
-  transition_to_glacier_days = var.transition_to_glacier_days
-  object_lock                = var.object_lock
-  object_lock_mode           = var.object_lock_mode
+  source                      = "github.com/hmrc/terraform-aws-s3-bucket-core?ref=3.1.0"
+  bucket_name                 = var.bucket_name
+  versioning_enabled          = var.versioning_enabled
+  data_expiry                 = var.data_expiry
+  data_sensitivity            = var.data_sensitivity
+  force_destroy               = var.force_destroy
+  kms_key_policy              = data.aws_iam_policy_document.kms.json
+  kms_rotation_period_in_days = var.kms_rotation_period_in_days
+  log_bucket_id               = var.log_bucket_id
+  tags                        = var.tags
+  transition_to_glacier_days  = var.transition_to_glacier_days
+  object_lock                 = var.object_lock
+  object_lock_mode            = var.object_lock_mode
 }
 
 data "aws_caller_identity" "current" {}

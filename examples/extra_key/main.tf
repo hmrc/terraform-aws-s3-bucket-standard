@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "4.9"
+      version = ">= 5.49"
     }
   }
 }
@@ -30,6 +30,9 @@ module "s3_example" {
   log_bucket_id    = aws_s3_bucket.access_logs.id
   object_lock      = local.object_lock
   object_lock_mode = "GOVERNANCE"
+
+  # This is only needed if the default of 90 days is not desired (value can be between 90 and 2560 days)
+  # kms_rotation_period_in_days = 365
 }
 
 resource "aws_kms_key" "additional_key" {
