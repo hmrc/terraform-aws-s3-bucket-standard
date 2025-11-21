@@ -152,3 +152,13 @@ variable "object_lock_mode" {
     error_message = "The object_lock_mode must be \"COMPLIANCE\" or \"GOVERNANCE\"."
   }
 }
+
+variable "kms_rotation_period_in_days" {
+  type        = number
+  description = "Custom KMS rotation interval; must be between 90 and 2560 days"
+  default     = 90
+  validation {
+    condition     = var.kms_rotation_period_in_days >= 90 && var.kms_rotation_period_in_days <= 2560
+    error_message = "KMS rotation period in days must be between 90 and 2560 (inclusive)."
+  }
+}

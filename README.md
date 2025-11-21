@@ -110,6 +110,14 @@ See [core bucket module](https://registry.terraform.io/modules/hmrc/s3-bucket-co
 
 This module ensures that the only encryption key that can be use is the KMS key created by the
 [core bucket module](https://registry.terraform.io/modules/hmrc/s3-bucket-core/aws/latest).  
+
+By default, the key is configured to rotate every **90 days**.
+You can customise this using the `kms_rotation_period_in_days` variable:
+
+- **Type:** `number`
+- **Default:** `90`
+- **Valid range:** `90`–`2560` days (inclusive)
+
 To ensure continued access to data, when putting an object either of the following is required
 1. do not specify either `x-amz-server-side-encryption` or `x-amz-server-side-encryption-aws-kms-key-id` so that the 
 bucket server_side_encryption_configuration takes effect
