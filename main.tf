@@ -1,16 +1,20 @@
 terraform {
-  required_version = ">= 1.0"
+  required_version = ">= 1.0, < 2.0"
 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.49"
+      version = ">= 5.49, < 7.0"
     }
   }
 }
 
 locals {
   current_provisioner_role = data.aws_iam_session_context.current.issuer_arn
+
+  # Whoever is currently running Terraform (plan or apply) is automatically treated as an admin
+  # of this bucket/KMS key, so you can never accidentally lock yourself out
+  current_provisioner_admin_roles = var.grant_current_provisioner_admin_access ? [local.current_provisioner_role] : []
 
   security_audit_role  = var.allow_security_team_metadata_audit ? ["arn:aws:iam::${data.aws_caller_identity.current.id}:role/RoleSecurityReadOnly"] : []
   guardduty_audit_role = var.allow_guardduty_metadata_audit ? ["arn:aws:iam::${data.aws_caller_identity.current.id}:role/aws-service-role/guardduty.amazonaws.com/AWSServiceRoleForAmazonGuardDuty"] : []
@@ -24,8 +28,7 @@ locals {
   metadata_read_services = sort(distinct(concat(local.default_services, var.metadata_read_services)))
   write_services         = var.write_services
 
-
-  admins     = sort(distinct(concat(var.admin_roles, [local.current_provisioner_role])))
+  admins     = sort(distinct(concat(var.admin_roles, local.current_provisioner_admin_roles)))
   describers = sort(distinct(concat(local.admins, local.security_audit_role, local.guardduty_audit_role, var.metadata_read_roles)))
   listers    = sort(distinct(concat(local.admins, var.list_roles)))
   all_roles  = sort(distinct(concat(local.admins, local.describers, var.read_roles, var.write_roles, var.list_roles)))
