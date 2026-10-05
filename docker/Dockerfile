@@ -6,12 +6,7 @@ ARG TF_PLUGIN_CACHE_DIR
 RUN mkdir -p ${TF_PLUGIN_CACHE_DIR}
 ENV TF_PLUGIN_CACHE_DIR ${TF_PLUGIN_CACHE_DIR}
 
-RUN apk add --no-cache bash go
-
-COPY ./test/go.mod ./test/go.mod
-COPY ./test/go.sum ./test/go.sum
-
-RUN cd test && go mod download -x
+RUN apk add --no-cache bash
 
 COPY . .
 
