@@ -45,6 +45,12 @@ variable "admin_roles" {
   default     = []
 }
 
+variable "grant_current_provisioner_admin_access" {
+  type        = bool
+  description = "Whether to automatically grant the IAM role currently running Terraform admin access to the bucket, to avoid accidental self-lockout. Set to false if the role running plan (e.g. a read-only planner role) should never gain admin access."
+  default     = true
+}
+
 variable "metadata_read_roles" {
   type        = list(string)
   description = "A list of ARNs to allow to access metadata to enable bucket audit"
