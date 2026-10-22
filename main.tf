@@ -51,6 +51,7 @@ module "bucket" {
   transition_to_intelligent_tiering_days = var.transition_to_intelligent_tiering_days
   transition_to_glacier_ir_days          = var.transition_to_glacier_ir_days
   transition_to_deep_archive_days        = var.transition_to_deep_archive_days
+  object_lock                            = var.object_lock
   object_lock_mode                       = var.object_lock_mode
 }
 
